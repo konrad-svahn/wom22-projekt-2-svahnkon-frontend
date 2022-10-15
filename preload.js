@@ -10,6 +10,11 @@ contextBridge.exposeInMainWorld('exposed', {
   getStuffFromMain: () => ipcRenderer.invoke('get-stuff-from-main'),
 
   // send data back to main
-  sendStuffToMain: (data) => ipcRenderer.invoke('send-stuff-to-main', data)
+  sendStuffToMain: (data) => ipcRenderer.invoke('send-stuff-to-main', data),
+
+  test2: () => {
+    console.log('preload')
+    ipcRenderer.invoke('clicked')
+  }
 
 })

@@ -33,7 +33,9 @@ app.whenReady().then(() => {
 // Example functions for communication between main and renderer (backend/frontend)
 ipcMain.handle('get-stuff-from-main', () => 'Stuff from main!')
 ipcMain.handle('send-stuff-to-main', async (event, data) => console.log(data))
-
+ipcMain.handle('clicked', async () => {
+  console.log(1)
+})
 
 app.on('window-all-closed', function () {
   app.quit()

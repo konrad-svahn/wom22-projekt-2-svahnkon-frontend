@@ -11,3 +11,7 @@
     
     await window.exposed.sendStuffToMain('Stuff from renderer')
 })()
+
+document.querySelector('#test').addEventListener('click', async () => {
+    await window.exposed.test2('clicked')
+})
