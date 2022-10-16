@@ -47,6 +47,25 @@ ipcMain.handle('clicked', async () => {
   console.log('test')
 })
 
+ipcMain.handle('get-service', async () => {
+  try {
+    const res = await fetch(rahtiUrl + '/services', {timeout: 5000})
+      
+    if (res.status > 201) {
+        console.log(res.status + ' ' + res.statusText)
+        console.log(res)
+        return false
+      }
+  
+      const service = await res.json()
+      return service
+
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
+})
+
 ipcMain.handle('logout', () => {
   store.set('jwt', null)
 })

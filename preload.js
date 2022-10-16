@@ -24,6 +24,6 @@ contextBridge.exposeInMainWorld('exposed', {
 
   create: () => ipcRenderer.invoke('create'),
 
-  getService: () => console.log(1)
+  getService: () => ipcRenderer.invoke('get-service')
 
 })

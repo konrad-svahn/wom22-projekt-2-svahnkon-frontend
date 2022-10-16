@@ -19,7 +19,9 @@ getCabin = async () => {
     if (!cabins) {
         document.querySelector('#login').style.display = 'block'
         document.querySelector('#logininfo').style.display = 'block'
+        document.querySelector('#cabin-list').style.display = 'block'
         document.querySelector('#logout').style.display = 'none'
+        document.querySelector('#booking-container').style.display = 'none'
         return
     }
 
@@ -37,13 +39,33 @@ getCabin = async () => {
                 </div>
         `;
     }
-    document.querySelector('#cabinlist').innerHTML = list;  
+    document.querySelector('#cabin-list').innerHTML = list;  
 
     document.querySelectorAll('.serv-but').forEach(item => {
         item.addEventListener('click', async () => {
-            await window.exposed.getService('clicked')
+            const s = await window.exposed.getService()
+            console.log(s)
+            getService(s)
         })
     })
+}
+
+getService = async (services) => {
+    document.querySelector('#cabin-list').style.display = 'none'
+    let list = "";
+    for (const ser of services) {
+        //cabinsArr.push(cab._id)
+        list += `
+            <div class="cabin">
+                <p>cabin being serviced: ${ser.cottage}</p>
+                <p>service name: ${ser.name}</p>
+                <p>hourly cost: ${ser.hourly_Cost}</p>
+                
+                <input class="order-but" data-id="${ser._id}" type="button" value="order">
+                </div>
+        `;
+    }
+    document.querySelector('#service-list').innerHTML = list;
 }
 
 
