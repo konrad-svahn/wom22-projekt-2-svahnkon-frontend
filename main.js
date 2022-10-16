@@ -67,7 +67,8 @@ ipcMain.handle('edit', async (event, data) => {
     timeout: 5000
   })
 
-  console.log(res)
+  return res
+
   } catch (error) {
     console.log(error.message)
     return false
