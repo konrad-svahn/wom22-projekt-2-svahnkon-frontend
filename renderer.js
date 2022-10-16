@@ -43,7 +43,7 @@ getCabin = async () => {
 
     document.querySelectorAll('.serv-but').forEach(item => {
         item.addEventListener('click', async () => {
-            const s = await window.exposed.getService()
+            const s = await window.exposed.getService(item.getAttribute('data-id'))
             console.log(s)
             getService(s)
         })
@@ -59,13 +59,21 @@ getService = async (services) => {
             <div class="cabin">
                 <p>cabin being serviced: ${ser.cottage}</p>
                 <p>service name: ${ser.name}</p>
-                <p>hourly cost: ${ser.hourly_Cost}</p>
+                <p>hourly cost: ${ser.hourly_cost}</p>
                 
-                <input class="order-but" data-id="${ser._id}" type="button" value="order">
+                <input class="order-but" data-id="${ser.id}" type="button" value="order">
                 </div>
         `;
     }
     document.querySelector('#service-list').innerHTML = list;
+
+    document.querySelectorAll('.order-but').forEach(item => {
+        item.addEventListener('click', async () => {
+            const o = await window.exposed.getOrder(item.getAttribute('data-id'))
+            console.log(o)
+            
+        })
+    })
 }
 
 

@@ -47,9 +47,14 @@ ipcMain.handle('clicked', async () => {
   console.log('test')
 })
 
-ipcMain.handle('get-service', async () => {
+ipcMain.handle('logout', () => {
+  store.set('jwt', null)
+})
+
+ipcMain.handle('get-order', async (event, data) => {
   try {
-    const res = await fetch(rahtiUrl + '/services', {timeout: 5000})
+    console.log(data)
+    const res = await fetch(rahtiUrl + '/orders', {timeout: 5000})
       
     if (res.status > 201) {
         console.log(res.status + ' ' + res.statusText)
@@ -66,8 +71,31 @@ ipcMain.handle('get-service', async () => {
   }
 })
 
-ipcMain.handle('logout', () => {
-  store.set('jwt', null)
+ipcMain.handle('get-service', async (event, data) => {
+  try {
+    const res = await fetch(rahtiUrl + '/services', {timeout: 5000})
+      
+    if (res.status > 201) {
+        console.log(res.status + ' ' + res.statusText)
+        console.log(res)
+        return false
+      }
+
+      const service = await res.json()
+      for (let i = 0; i < service.length; i++) {
+        if (service[i].cottage != data) {
+          service.splice(i, 1 )
+          i = i-1
+          
+        }
+      }
+
+      return service
+
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
 })
 
 ipcMain.handle('get-cabins', async () => {
