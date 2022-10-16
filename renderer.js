@@ -119,11 +119,7 @@ document.querySelector('#test').addEventListener('click', async () => {
 
 document.querySelector('#create').addEventListener('click', async () => {
     const time = document.querySelector('#time').value
-    console.log(await window.exposed.create(
-        {service: time,
-        duration: time
-        }
-        ))
+    console.log(await window.exposed.create(time))
 })
 
 document.querySelector('#logout').addEventListener('click', async () => {

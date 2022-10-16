@@ -53,17 +53,26 @@ ipcMain.handle('logout', () => {
 })
 
 ipcMain.handle('create', async (event, data) => {
-  console.log(JSON.stringify({text: data.text}))
+  try {
   if (data == null) {return false}
-
+  d = new Date(data) 
   const res = await fetch(rahtiUrl + '/orders',{
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({text: data.text}),
+    body: JSON.stringify({
+      "service": store.get('service'),
+      "cottage": store.get('cotage'),
+      "duration": d.getMilliseconds()
+    }),
     timeout: 5000
   })
 
   console.log(res)
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
+  
 
 })
 
@@ -85,6 +94,7 @@ ipcMain.handle('delete', async (event, data) => {
 
 ipcMain.handle('get-order', async (event, data) => {
   try {
+    store.set('service', data)
     const res = await fetch(rahtiUrl + '/orders', {timeout: 5000})
       
     if (res.status > 201) {
