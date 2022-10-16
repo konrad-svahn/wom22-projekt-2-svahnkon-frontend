@@ -5,15 +5,14 @@
  * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
-
-(async() => {
+(async () => {
     console.log(await window.exposed.getStuffFromMain())
     
     await window.exposed.sendStuffToMain('Stuff from renderer')
-    getService()
+    getCabin()
 })()
 
-getService = async () => {
+getCabin = async () => {
     const cabins = await window.exposed.getCabins()
     console.log(cabins)
 
@@ -26,6 +25,7 @@ getService = async () => {
 
     let list = "";
     for (const cab of cabins) {
+        //cabinsArr.push(cab._id)
         list += `
             <div class="cabin">
                 <p>addres: ${cab.addres}</p>
@@ -33,26 +33,35 @@ getService = async () => {
                 <p>sauna: ${cab.sauna}</p>
                 <p>size: ${cab.size}</p> 
                 
-                <input class="btn-del" data-id="${cab._id}" type="button" value="services">
+                <input class="serv-but" data-id="${cab._id}" type="button" value="services">
                 </div>
         `;
     }
-    document.querySelector('#cabinlist').innerHTML = list;
+    document.querySelector('#cabinlist').innerHTML = list;  
+
+    document.querySelectorAll('.serv-but').forEach(item => {
+        item.addEventListener('click', async () => {
+            await window.exposed.getService('clicked')
+        })
+    })
 }
+
+
 
 document.querySelector('#test').addEventListener('click', async () => {
     await window.exposed.test2('clicked')
-    getService()
+    getCabin()
 })
 
 document.querySelector('#create').addEventListener('click', async () => {
+    const time = document.querySelector('time').value
     await window.exposed.create('create')
-    getService()
+    console.log(time)
 })
 
 document.querySelector('#logout').addEventListener('click', async () => {
     await window.exposed.logout('logout')
-    getService()
+    getCabin()
 })
 
 document.querySelector('#login-but').addEventListener('click', async () => {

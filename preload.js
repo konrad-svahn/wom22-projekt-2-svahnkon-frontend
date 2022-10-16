@@ -22,6 +22,8 @@ contextBridge.exposeInMainWorld('exposed', {
   
   logout: () => ipcRenderer.invoke('logout'),
 
-  create: () => ipcRenderer.invoke('create')
+  create: () => ipcRenderer.invoke('create'),
+
+  getService: () => console.log(1)
 
 })
