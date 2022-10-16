@@ -6,4 +6,12 @@
 #logininfo {
     display: none;
 }
+
+#test {
+    display: none;
+}
+
+.divide {
+    height: 15px;
+}
 /* Add styles here to customize the appearance of your app */

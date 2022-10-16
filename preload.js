@@ -16,10 +16,12 @@ contextBridge.exposeInMainWorld('exposed', {
     ipcRenderer.invoke('clicked')
   },
 
-  getService: () => ipcRenderer.invoke('get-service'),
+  getCabins: () => ipcRenderer.invoke('get-cabins'),
 
   login: (data) => ipcRenderer.invoke('login', data),
   
-  logout: () => ipcRenderer.invoke('logout')
+  logout: () => ipcRenderer.invoke('logout'),
+
+  create: () => ipcRenderer.invoke('create')
 
 })

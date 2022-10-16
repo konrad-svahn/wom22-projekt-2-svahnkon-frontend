@@ -14,10 +14,10 @@
 })()
 
 getService = async () => {
-    const services = await window.exposed.getService()
-    console.log(services)
+    const cabins = await window.exposed.getCabins()
+    console.log(cabins)
 
-    if (!services) {
+    if (!cabins) {
         document.querySelector('#login').style.display = 'block'
         document.querySelector('#logininfo').style.display = 'block'
         document.querySelector('#logout').style.display = 'none'
@@ -25,19 +25,28 @@ getService = async () => {
     }
 
     let list = "";
-    for (const serv of services) {
+    for (const cab of cabins) {
         list += `
-            <div class="service">
-                ${serv.adres}
-                <input class="btn-del" data-id="${serv._id}" type="button" value="del">
+            <div class="cabin">
+                <p>addres: ${cab.addres}</p>
+                <p>beach: ${cab.beach}</p>
+                <p>sauna: ${cab.sauna}</p>
+                <p>size: ${cab.size}</p> 
+                
+                <input class="btn-del" data-id="${cab._id}" type="button" value="services">
                 </div>
         `;
     }
-    document.querySelector('#servlist').innerHTML = list;
+    document.querySelector('#cabinlist').innerHTML = list;
 }
 
 document.querySelector('#test').addEventListener('click', async () => {
     await window.exposed.test2('clicked')
+    getService()
+})
+
+document.querySelector('#create').addEventListener('click', async () => {
+    await window.exposed.create('create')
     getService()
 })
 

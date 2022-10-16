@@ -51,7 +51,7 @@ ipcMain.handle('logout', () => {
   store.set('jwt', null)
 })
 
-ipcMain.handle('get-service', async () => {
+ipcMain.handle('get-cabins', async () => {
   try {
     const res = await fetch(rahtiUrl + '/cabins', {
       headers: { 'Authorization': 'Bearer ' + store.get('jwt')},
