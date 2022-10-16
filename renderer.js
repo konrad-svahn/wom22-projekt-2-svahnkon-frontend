@@ -7,7 +7,8 @@
  */
 (async () => {
     console.log(await window.exposed.getStuffFromMain())
-    
+    document.querySelector('#service-container').style.display = 'none'
+    document.querySelector('#booking-container').style.display = 'none'
     await window.exposed.sendStuffToMain('Stuff from renderer')
     getCabin()
 })()
@@ -19,11 +20,13 @@ getCabin = async () => {
     if (!cabins) {
         document.querySelector('#login').style.display = 'block'
         document.querySelector('#logininfo').style.display = 'block'
-        document.querySelector('#cabin-list').style.display = 'block'
+        document.querySelector('#cabin-list').style.display = 'none'
         document.querySelector('#logout').style.display = 'none'
         document.querySelector('#booking-container').style.display = 'none'
+        document.querySelector('#service-container').style.display = 'none'
         return
     }
+    document.querySelector('#cabin-list').style.display = 'block'
 
     let list = "";
     for (const cab of cabins) {
@@ -52,6 +55,7 @@ getCabin = async () => {
 
 getService = async (services) => {
     document.querySelector('#cabin-list').style.display = 'none'
+    document.querySelector('#service-container').style.display = 'block'
     let list = "";
     for (const ser of services) {
         //cabinsArr.push(cab._id)
@@ -70,13 +74,43 @@ getService = async (services) => {
     document.querySelectorAll('.order-but').forEach(item => {
         item.addEventListener('click', async () => {
             const o = await window.exposed.getOrder(item.getAttribute('data-id'))
-            console.log(o)
-            
+            document.querySelector('#booking-container').style.display = 'block'
+            document.querySelector('#service-container').style.display = 'none'
+            getOrder(o)
         })
     })
 }
 
+getOrder = async (orders) => {
+    console.log(orders)
+    let list = "";
+    for (const ord of orders) {
+        var date = new Date(ord.duration)
+        list += `
+            <div class="cabin">
+                <p>date: ${date}</p>    
+                <input class="edit-but" data-id="${ord.id}" type="button" value="edit">
+                <input class="delete-but" data-id="${ord.id}" type="button" value="delete">
+                <div class="divide"></div>
+                </div>
+        `;
+    }
+    document.querySelector('#booking-list').innerHTML = list;
 
+    document.querySelectorAll('.edit-but').forEach(item => {
+        item.addEventListener('click', async () => {
+            const o = await window.exposed.getOrder(item.getAttribute('data-id'))
+            getOrder(o)
+        })
+    })
+
+    document.querySelectorAll('delete-but').forEach(item => {
+        item.addEventListener('click', async () => {
+            const o = await window.exposed.getOrder(item.getAttribute('data-id'))
+            getOrder(o)
+        })
+    })
+}
 
 document.querySelector('#test').addEventListener('click', async () => {
     await window.exposed.test2('clicked')
@@ -84,9 +118,8 @@ document.querySelector('#test').addEventListener('click', async () => {
 })
 
 document.querySelector('#create').addEventListener('click', async () => {
-    const time = document.querySelector('time').value
-    await window.exposed.create('create')
-    console.log(time)
+    const time = document.querySelector('#time').value
+    await window.exposed.create(time)
 })
 
 document.querySelector('#logout').addEventListener('click', async () => {
@@ -109,4 +142,14 @@ document.querySelector('#login-but').addEventListener('click', async () => {
     document.querySelector('#login').style.display = 'none'
     document.querySelector('#logininfo').style.display = 'none'
     document.querySelector('#logout').style.display = 'block'
+})
+
+document.querySelector('#back1').addEventListener('click', async () => {
+    document.querySelector('#cabin-list').style.display = 'block'
+    document.querySelector('#service-container').style.display = 'none'
+})
+
+document.querySelector('#back2').addEventListener('click', async () => {
+    document.querySelector('#booking-container').style.display = 'none'
+    document.querySelector('#service-container').style.display = 'block'
 })

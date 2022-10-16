@@ -5,6 +5,7 @@ const { electron } = require('process')
 const fetch = require('electron-fetch').default
 
 const Store = require('electron-store')
+const ElectronStore = require('electron-store')
 const store = new Store()
 
 //python apin för services
@@ -51,9 +52,13 @@ ipcMain.handle('logout', () => {
   store.set('jwt', null)
 })
 
+ipcMain.handle('create', (event, data) => {
+  console.log(data)
+  if (data = null) {return false}
+})
+
 ipcMain.handle('get-order', async (event, data) => {
   try {
-    console.log(data)
     const res = await fetch(rahtiUrl + '/orders', {timeout: 5000})
       
     if (res.status > 201) {
@@ -62,8 +67,18 @@ ipcMain.handle('get-order', async (event, data) => {
         return false
       }
   
-      const service = await res.json()
-      return service
+      const order = await res.json()
+      console.log(data)
+      //console.log(order)
+      for (let i = 0; i < order.length; i++) {
+        //console.log(order[i].service)
+        if (order[i].service != data || order[i].cottage != store.get('cotage')) {
+          order.splice(i, 1 )
+          i = i-1
+        }
+      }
+
+      return order
 
   } catch (error) {
     console.log(error.message)
@@ -73,6 +88,7 @@ ipcMain.handle('get-order', async (event, data) => {
 
 ipcMain.handle('get-service', async (event, data) => {
   try {
+    store.set('cotage', data)
     const res = await fetch(rahtiUrl + '/services', {timeout: 5000})
       
     if (res.status > 201) {
@@ -86,7 +102,6 @@ ipcMain.handle('get-service', async (event, data) => {
         if (service[i].cottage != data) {
           service.splice(i, 1 )
           i = i-1
-          
         }
       }
 

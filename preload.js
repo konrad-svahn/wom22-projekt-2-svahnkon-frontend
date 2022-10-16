@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('exposed', {
   
   logout: () => ipcRenderer.invoke('logout'),
 
-  create: () => ipcRenderer.invoke('create'),
+  create: (data) => ipcRenderer.invoke('create',data),
 
   getService: (data) => ipcRenderer.invoke('get-service', data),
 
