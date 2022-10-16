@@ -52,10 +52,36 @@ ipcMain.handle('logout', () => {
   store.set('jwt', null)
 })
 
-ipcMain.handle('create', (event, data) => {
-  console.log(data)
-  if (data = null) {return false}
+ipcMain.handle('create', async (event, data) => {
+  console.log(JSON.stringify({text: data.text}))
+  if (data == null) {return false}
+
+  const res = await fetch(rahtiUrl + '/orders',{
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: data.text}),
+    timeout: 5000
+  })
+
+  console.log(res)
+
 })
+
+ipcMain.handle('delete', async (event, data) => {
+  try {
+    
+    const res = await fetch(rahtiUrl + '/orders/' + data,{
+      method: 'DELETE',
+      timeout: 5000
+    })
+    
+    return res
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
+})
+
 
 ipcMain.handle('get-order', async (event, data) => {
   try {

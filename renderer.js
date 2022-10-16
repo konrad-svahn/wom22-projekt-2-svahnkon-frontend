@@ -97,17 +97,17 @@ getOrder = async (orders) => {
     }
     document.querySelector('#booking-list').innerHTML = list;
 
-    document.querySelectorAll('.edit-but').forEach(item => {
+    document.querySelectorAll('.delete-but').forEach(item => {
         item.addEventListener('click', async () => {
-            const o = await window.exposed.getOrder(item.getAttribute('data-id'))
-            getOrder(o)
+            const d = await window.exposed.delete(item.getAttribute('data-id'))
+            console.log(d)
         })
     })
 
-    document.querySelectorAll('delete-but').forEach(item => {
+    document.querySelectorAll('.edit-but').forEach(item => {
         item.addEventListener('click', async () => {
-            const o = await window.exposed.getOrder(item.getAttribute('data-id'))
-            getOrder(o)
+            const e = await window.exposed.getOrder(item.getAttribute('data-id'))
+            
         })
     })
 }
@@ -119,7 +119,11 @@ document.querySelector('#test').addEventListener('click', async () => {
 
 document.querySelector('#create').addEventListener('click', async () => {
     const time = document.querySelector('#time').value
-    await window.exposed.create(time)
+    console.log(await window.exposed.create(
+        {service: time,
+        duration: time
+        }
+        ))
 })
 
 document.querySelector('#logout').addEventListener('click', async () => {
