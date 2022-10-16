@@ -52,6 +52,28 @@ ipcMain.handle('logout', () => {
   store.set('jwt', null)
 })
 
+ipcMain.handle('edit', async (event, data) => {
+  try {
+  if (data == null) {return false}
+  d = new Date(data.time) 
+  const res = await fetch(rahtiUrl + '/orders/' + data.order,{
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      "service": store.get('service'),
+      "cottage": store.get('cotage'),
+      "duration": d.getTime()
+    }),
+    timeout: 5000
+  })
+
+  console.log(res)
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
+})
+
 ipcMain.handle('create', async (event, data) => {
   try {
   if (data == null) {return false}
@@ -67,13 +89,11 @@ ipcMain.handle('create', async (event, data) => {
     timeout: 5000
   })
 
-  console.log(res)
+  return res
   } catch (error) {
     console.log(error.message)
     return false
   }
-  
-
 })
 
 ipcMain.handle('delete', async (event, data) => {

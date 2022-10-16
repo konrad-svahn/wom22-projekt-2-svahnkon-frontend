@@ -106,7 +106,10 @@ getOrder = async (orders) => {
 
     document.querySelectorAll('.edit-but').forEach(item => {
         item.addEventListener('click', async () => {
-            const e = await window.exposed.getOrder(item.getAttribute('data-id'))
+            const e = await window.exposed.getOrder({
+                order: item.getAttribute('data-id'),
+                time: document.querySelector('#time').value
+            })
             
         })
     })
