@@ -14,8 +14,26 @@
 })()
 
 getService = async () => {
-    const service = await window.exposed.getService()
-    console.log(service)
+    const services = await window.exposed.getService()
+    console.log(services)
+
+    if (!services) {
+        document.querySelector('#login').style.display = 'block'
+        document.querySelector('#logininfo').style.display = 'block'
+        document.querySelector('#logout').style.display = 'none'
+        return
+    }
+
+    let list = "";
+    for (const serv of services) {
+        list += `
+            <div class="service">
+                ${serv.adres}
+                <input class="btn-del" data-id="${serv._id}" type="button" value="del">
+                </div>
+        `;
+    }
+    document.querySelector('#servlist').innerHTML = list;
 }
 
 document.querySelector('#test').addEventListener('click', async () => {
@@ -23,11 +41,24 @@ document.querySelector('#test').addEventListener('click', async () => {
     getService()
 })
 
+document.querySelector('#logout').addEventListener('click', async () => {
+    await window.exposed.logout('logout')
+    getService()
+})
+
 document.querySelector('#login-but').addEventListener('click', async () => {
     
 
-    await window.exposed.login({    
+    const loginFailed = await window.exposed.login({    
         email: document.querySelector('#email').value,
         password: document.querySelector('#password').value
     })
+    console.log(loginFailed)
+    if (loginFailed) {
+        document.querySelector('#msg').innerText = loginFailed.msg
+        return
+    }
+    document.querySelector('#login').style.display = 'none'
+    document.querySelector('#logininfo').style.display = 'none'
+    document.querySelector('#logout').style.display = 'block'
 })

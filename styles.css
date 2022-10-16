@@ -1,3 +1,9 @@
 /* styles.css */
+#login {
+    display: none;
+}
 
+#logininfo {
+    display: none;
+}
 /* Add styles here to customize the appearance of your app */

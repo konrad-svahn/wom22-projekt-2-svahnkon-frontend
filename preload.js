@@ -13,14 +13,13 @@ contextBridge.exposeInMainWorld('exposed', {
   sendStuffToMain: (data) => ipcRenderer.invoke('send-stuff-to-main', data),
 
   test2: () => {
-    console.log('preload')
     ipcRenderer.invoke('clicked')
   },
 
   getService: () => ipcRenderer.invoke('get-service'),
 
-  login: (data) => {
-    console.log(2)
-    ipcRenderer.invoke('login', data)
-  }
+  login: (data) => ipcRenderer.invoke('login', data),
+  
+  logout: () => ipcRenderer.invoke('logout')
+
 })

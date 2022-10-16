@@ -34,8 +34,7 @@ function createWindow () {
 
 // Called when Electron is ready to create browser windows.
 app.whenReady().then(() => {
-
-
+  
   createWindow()
 
   // Check original template for MacOS stuff!
@@ -48,21 +47,39 @@ ipcMain.handle('clicked', async () => {
   console.log('test')
 })
 
+ipcMain.handle('logout', () => {
+  store.set('jwt', null)
+})
 
-ipcMain.handle('get-service', async () => {/*
+ipcMain.handle('get-service', async () => {
   try {
-    const res = await fetch(rahtiUrl + '',{timeout: 5000})
-    const service = await res.json
+    const res = await fetch(rahtiUrl + '/cabins', {
+      headers: { 'Authorization': 'Bearer ' + store.get('jwt')},
+      timeout: 5000
+    })
+
+    if (res.status > 201) {
+      console.log(res.status + ' ' + res.statusText)
+      console.log(res)
+      return false
+    }
+
+    const service = await res.json()
+
+    if (service.msg == 'auth failed') {
+      return false
+    }
+
     return service
+
   } catch (error) {
     console.log(error.message)
     return false
-  }//*/
+  }
 })
 
 ipcMain.handle('login', async (event, data) => {
   try {
-    console.log(3)
     const res = await fetch(azureUrl + '/users/login',{
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -70,14 +87,15 @@ ipcMain.handle('login', async (event, data) => {
       timeout: 5000
     })
     const user = await res.json()
-    console.log(user)
-    if (res.status > 200) {
-      return false
+    if (res.status > 201) {
+      return user
     }
-    return true
+    console.log(user.token)
+    store.set('jwt', user.token)
+    return false
   } catch (error) {
     console.log(error.message)
-    return false
+    return { 'msg': "Login failed."}
   }
 })
 
