@@ -10,8 +10,24 @@
     console.log(await window.exposed.getStuffFromMain())
     
     await window.exposed.sendStuffToMain('Stuff from renderer')
+    getService()
 })()
+
+getService = async () => {
+    const service = await window.exposed.getService()
+    console.log(service)
+}
 
 document.querySelector('#test').addEventListener('click', async () => {
     await window.exposed.test2('clicked')
+    getService()
+})
+
+document.querySelector('#login-but').addEventListener('click', async () => {
+    
+
+    await window.exposed.login({    
+        email: document.querySelector('#email').value,
+        password: document.querySelector('#password').value
+    })
 })

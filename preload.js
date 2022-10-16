@@ -15,6 +15,12 @@ contextBridge.exposeInMainWorld('exposed', {
   test2: () => {
     console.log('preload')
     ipcRenderer.invoke('clicked')
-  }
+  },
 
+  getService: () => ipcRenderer.invoke('get-service'),
+
+  login: (data) => {
+    console.log(2)
+    ipcRenderer.invoke('login', data)
+  }
 })
