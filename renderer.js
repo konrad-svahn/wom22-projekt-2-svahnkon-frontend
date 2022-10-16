@@ -100,7 +100,7 @@ getOrder = async (orders) => {
     document.querySelectorAll('.delete-but').forEach(item => {
         item.addEventListener('click', async () => {
             const d = await window.exposed.delete(item.getAttribute('data-id'))
-            console.log(d)
+            console.log(d) 
         })
     })
 
