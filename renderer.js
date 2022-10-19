@@ -20,8 +20,7 @@ getCabin = async () => {
         document.querySelector('#service-container').style.display = 'none'
         return
     }
-    document.querySelector('#cabin-list').style.display = 'block'
-
+    
     let list = ''
     for (const cab of cabins) {
         list += `
@@ -36,7 +35,10 @@ getCabin = async () => {
         `
     }
     document.querySelector('#cabin-list').innerHTML = list;  
-
+    
+    document.querySelector('#cabin-list').style.display = 'block'
+    document.querySelector('#logout').style.display = 'block'
+    
     getService()
 }
 
@@ -135,9 +137,8 @@ document.querySelector('#login').addEventListener('click', async () => {
     }
     document.querySelector('#login-container').style.display = 'none'
     document.querySelector('#logininfo').style.display = 'none'
-    document.querySelector('#logout').style.display = 'block'
     document.querySelector('#cabin-list').style.display = 'block'
-    getCabin()
+    getCabin();
 })
 
 document.querySelector('#logout').addEventListener('click', async () => {
