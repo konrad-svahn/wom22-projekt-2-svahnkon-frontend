@@ -1,14 +1,27 @@
 /* styles.css */
+#logininfo {
+    display: none;
+}
+
 #login-container {
     display: none;
 }
 
-#logininfo {
+#service-container {
+    display: none;
+}
+
+#booking-container {
     display: none;
 }
 
 #test {
     display: none;
+}
+
+#content {
+    position: fixed;
+    left: 45%;
 }
 
 .divide {

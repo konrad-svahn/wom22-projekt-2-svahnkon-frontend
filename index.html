@@ -7,41 +7,45 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <h1 id="logininfo"> horse.realman@V.orse    fh.kjhgfds</h1>
+    <div id="content">
+      <h1 id="logininfo"> horse.realman@V.orse  <br>  fh.kjhgfds</h1>
 
-    <div id="login-container">
-        <input id="email" placeholder="E-mail">
-        <input type="password" id="password" placeholder="Password">
-        <input id="login" type="button" value="Login">
-        <div id="msg" style="color:red;"></div>
-    </div>
-
-    <div id="cabin-list"></div>
-
-    <div id="service-container">
-      <div id="service-list"></div>
-      <div class="divide"></div>
-      <button id="back1">back</button>
-    </div>
-
-    <div id="booking-container">
-      <div id="booking-list"></div>
-      <div class="divide"></div>
-      <div id="edit">
-        <input type="hidden" id="imp">
-        <input type="datetime-local" id="time">
-        <input type="button" value="create" id="create">
+      <div id="login-container">
+          <input id="email" placeholder="E-mail"><br>
+          <input type="password" id="password" placeholder="Password"><br>
+          <div class="divide"></div><br>
+          <input id="login" type="button" value="Login"><br>
+          <div id="msg" style="color:red;"></div>
       </div>
+
+      <div id="cabin-list"></div>
+
+      <div id="service-container">
+        <div id="service-list"></div>
+        <div class="divide"></div>
+        <button id="back1">back</button>
+      </div>
+
+      <div id="booking-container">
+        <div id="booking-list"></div>
+        <div class="divide"></div>
+        <div id="edit">
+          <input type="hidden" id="imp">
+          <input type="datetime-local" id="time">
+          <input type="button" value="create" id="create">
+        </div>
+        <div class="divide"></div>
+        <button id="back2">back</button>
+      </div>
+
+      
+      <div id="msg2" style="color:red;"></div>
+
       <div class="divide"></div>
-      <button id="back2">back</button>
+
+      <button id="logout">logout</button>
+      <button id="test">click</button>
     </div>
-
-    <div id="msg2" style="color:red;"></div>
-
-    <div class="divide"></div>
-
-    <button id="logout">logout</button>
-    <button id="test">click</button>
 
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>

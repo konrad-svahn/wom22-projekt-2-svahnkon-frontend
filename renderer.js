@@ -1,6 +1,4 @@
 (async () => {
-    document.querySelector('#service-container').style.display = 'none'
-    document.querySelector('#booking-container').style.display = 'none'
     await window.exposed.sendStuffToMain('Stuff from renderer')
     getCabin()
 })()
@@ -38,7 +36,7 @@ getCabin = async () => {
     
     document.querySelector('#cabin-list').style.display = 'block'
     document.querySelector('#logout').style.display = 'block'
-    
+
     getService()
 }
 
