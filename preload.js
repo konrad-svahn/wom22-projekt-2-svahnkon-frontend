@@ -12,11 +12,11 @@ contextBridge.exposeInMainWorld('exposed', {
   // send data back to main
   sendStuffToMain: (data) => ipcRenderer.invoke('send-stuff-to-main', data),
 
-  test2: () => {
-    ipcRenderer.invoke('clicked')
-  },
-
   getCabins: () => ipcRenderer.invoke('get-cabins'),
+
+  getService: (data) => ipcRenderer.invoke('get-service', data),
+
+  getOrder: (data) => ipcRenderer.invoke('get-order', data),
 
   login: (data) => ipcRenderer.invoke('login', data),
   
@@ -26,10 +26,5 @@ contextBridge.exposeInMainWorld('exposed', {
 
   edit: (data) => ipcRenderer.invoke('edit',data),
 
-  delete: (data) => ipcRenderer.invoke('delete',data),
-
-  getService: (data) => ipcRenderer.invoke('get-service', data),
-
-  getOrder: (data) => ipcRenderer.invoke('get-order', data)
-
+  delete: (data) => ipcRenderer.invoke('delete',data)
 })

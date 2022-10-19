@@ -41,117 +41,35 @@ app.whenReady().then(() => {
   // Check original template for MacOS stuff!
 })
 
-// Example functions for communication between main and renderer (backend/frontend)
-ipcMain.handle('get-stuff-from-main', () => 'Stuff from main!')
-ipcMain.handle('send-stuff-to-main', async (event, data) => console.log(data))
-ipcMain.handle('clicked', async () => {
-  console.log('test')
-})
-
-ipcMain.handle('logout', () => {
-  store.set('jwt', null)
-})
-
-ipcMain.handle('edit', async (event, data) => {
-  try {
-  if (data.time == "") {return false}
-  d = new Date(data.time)
-  const res = await fetch(rahtiUrl + '/orders/' + data.order,{
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      "service": store.get('service'),
-      "cottage": store.get('cotage'),
-      "duration": d
-    }),
-    timeout: 5000
-  })
-
-  if (res.status > 201) {
-    console.log(res.status + ' ' + res.statusText)
-    console.log(res)
-    return false
-  }
-  return true 
-
-  } catch (error) {
-    console.log(error.message)
-    return false
-  }
-})
-
-ipcMain.handle('create', async (event, data) => {
-  try {
-    if (data == "") {return false}
-    d = new Date(data)
-  const res = await fetch(rahtiUrl + '/orders',{
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      "service": store.get('service'),
-      "cottage": store.get('cotage'),
-      "duration": d
-    }),
-    timeout: 5000
-  })
-
+//kollar om den tagit emot et felmedelande
+statusCheck = (res) => {
   if (res.status > 201) {
     console.log(res.status + ' ' + res.statusText)
     console.log(res)
     return false
   }
   return true
+}
 
-  } catch (error) {
-    console.log(error.message)
-    return false
-  }
-})
+// Example functions for communication between main and renderer (backend/frontend)
+ipcMain.handle('get-stuff-from-main', () => 'Stuff from main!')
+ipcMain.handle('send-stuff-to-main', async (event, data) => console.log(data))
 
-ipcMain.handle('delete', async (event, data) => {
+ipcMain.handle('get-cabins', async () => {
   try {
-    const res = await fetch(rahtiUrl + '/orders/' + data,{
-      method: 'DELETE',
+    const res = await fetch(rahtiUrl + '/cabins', {
+      headers: { 'Authorization': 'Bearer ' + store.get('jwt')},
       timeout: 5000
     })
-    
-    if (res.status > 201) {
-      console.log(res.status + ' ' + res.statusText)
-      console.log(res)
+
+    if (!statusCheck(res)) {return false}
+
+    const service = await res.json()
+
+    if (service.msg == 'auth failed') {
       return false
     }
-    return true
-
-  } catch (error) {
-    console.log(error.message)
-    return false
-  }
-})
-
-
-ipcMain.handle('get-order', async (event, data) => {
-  try {
-    store.set('service', data)
-    const res = await fetch(rahtiUrl + '/orders', {timeout: 5000})
-      
-    if (res.status > 201) {
-        console.log(res.status + ' ' + res.statusText)
-        console.log(res)
-        return false
-      }
-  
-      const order = await res.json()
-      console.log(data)
-      //console.log(order)
-      for (let i = 0; i < order.length; i++) {
-        //console.log(order[i].service)
-        if (order[i].service != data || order[i].cottage != store.get('cotage')) {
-          order.splice(i, 1 )
-          i = i-1
-        }
-      }
-
-      return order
+    return service
 
   } catch (error) {
     console.log(error.message)
@@ -164,21 +82,16 @@ ipcMain.handle('get-service', async (event, data) => {
     store.set('cotage', data)
     const res = await fetch(rahtiUrl + '/services', {timeout: 5000})
       
-    if (res.status > 201) {
-        console.log(res.status + ' ' + res.statusText)
-        console.log(res)
-        return false
-      }
+    if (!statusCheck(res)) {return false}
 
-      const service = await res.json()
-      for (let i = 0; i < service.length; i++) {
-        if (service[i].cottage != data) {
-          service.splice(i, 1 )
-          i = i-1
-        }
+    const service = await res.json()
+    for (let i = 0; i < service.length; i++) {
+      if (service[i].cottage != data) {
+        service.splice(i, 1 )
+        i = i-1
       }
-
-      return service
+    }
+    return service
 
   } catch (error) {
     console.log(error.message)
@@ -186,26 +99,22 @@ ipcMain.handle('get-service', async (event, data) => {
   }
 })
 
-ipcMain.handle('get-cabins', async () => {
+ipcMain.handle('get-order', async (event, data) => {
   try {
-    const res = await fetch(rahtiUrl + '/cabins', {
-      headers: { 'Authorization': 'Bearer ' + store.get('jwt')},
-      timeout: 5000
-    })
-
-    if (res.status > 201) {
-      console.log(res.status + ' ' + res.statusText)
-      console.log(res)
-      return false
+    store.set('service', data)
+    const res = await fetch(rahtiUrl + '/orders', {timeout: 5000})
+      
+    if (!statusCheck(res)) {return false}
+  
+    const order = await res.json()
+    
+    for (let i = 0; i < order.length; i++) {
+      if (order[i].service != data || order[i].cottage != store.get('cotage')) {
+        order.splice(i, 1)
+        i = i-1
+      }
     }
-
-    const service = await res.json()
-
-    if (service.msg == 'auth failed') {
-      return false
-    }
-
-    return service
+    return order
 
   } catch (error) {
     console.log(error.message)
@@ -221,16 +130,85 @@ ipcMain.handle('login', async (event, data) => {
       body: JSON.stringify(data),
       timeout: 5000
     })
+
     const user = await res.json()
-    if (res.status > 201) {
+    if (!statusCheck(res)) {
       return user
     }
-    console.log(user.token)
     store.set('jwt', user.token)
     return false
+
   } catch (error) {
     console.log(error.message)
     return { 'msg': "Login failed."}
+  }
+})
+
+ipcMain.handle('logout', () => {
+  store.set('jwt', null)
+})
+
+ipcMain.handle('create', async (event, data) => {
+  try {
+    if (data == '') {return false}
+    d = new Date(data)
+    const res = await fetch(rahtiUrl + '/orders',{
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        'service': store.get('service'),
+        'cottage': store.get('cotage'),
+        'duration': d
+      }),
+    timeout: 5000
+    })
+
+    if (!statusCheck(res)) {return false}
+    return true
+
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
+})
+
+ipcMain.handle('edit', async (event, data) => {
+  try {
+    if (data.time == '') {return false}
+    d = new Date(data.time)
+    const res = await fetch(rahtiUrl + '/orders/' + data.order,{
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        'service': store.get('service'),
+        'cottage': store.get('cotage'),
+        'duration': d
+      }),
+      timeout: 5000
+    })
+
+    if (!statusCheck(res)) {return false}
+    return true 
+
+  } catch (error) {
+    console.log(error.message)
+    return false
+  }
+})
+
+ipcMain.handle('delete', async (event, data) => {
+  try {
+    const res = await fetch(rahtiUrl + '/orders/' + data,{
+      method: 'DELETE',
+      timeout: 5000
+    })
+    
+    if (!statusCheck(res)) {return false}
+    return true
+
+  } catch (error) {
+    console.log(error.message)
+    return false
   }
 })
 
@@ -238,5 +216,3 @@ app.on('window-all-closed', function () {
   app.quit()
   // Check original template for MacOS stuff!
 })
-
-
