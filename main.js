@@ -54,15 +54,16 @@ ipcMain.handle('logout', () => {
 
 ipcMain.handle('edit', async (event, data) => {
   try {
-  if (data == null) {return false}
-  d = new Date(data.time) 
+  if (data.time == "") {return false}
+  d = new Date(data.time)
+  console.log(d)
   const res = await fetch(rahtiUrl + '/orders/' + data.order,{
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       "service": store.get('service'),
       "cottage": store.get('cotage'),
-      "duration": d.getTime()
+      "duration": d
     }),
     timeout: 5000
   })
@@ -77,20 +78,21 @@ ipcMain.handle('edit', async (event, data) => {
 
 ipcMain.handle('create', async (event, data) => {
   try {
-  if (data == null) {return false}
-  d = new Date(data) 
+    if (data == "") {return false}
+    d = new Date(data)
+    console.log(d)
   const res = await fetch(rahtiUrl + '/orders',{
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       "service": store.get('service'),
       "cottage": store.get('cotage'),
-      "duration": d.getMilliseconds()
+      "duration": d
     }),
     timeout: 5000
   })
-
   return res
+
   } catch (error) {
     console.log(error.message)
     return false
@@ -99,13 +101,12 @@ ipcMain.handle('create', async (event, data) => {
 
 ipcMain.handle('delete', async (event, data) => {
   try {
-    
     const res = await fetch(rahtiUrl + '/orders/' + data,{
       method: 'DELETE',
       timeout: 5000
     })
-    
     return res
+
   } catch (error) {
     console.log(error.message)
     return false

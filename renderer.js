@@ -110,7 +110,11 @@ getOrder = async (orders) => {
                 order: item.getAttribute('data-id'),
                 time: document.querySelector('#time').value
             })
-            
+            if  (!e) {
+                document.querySelector('#msg2').innerText = "pleae enter a valid time in the date field"
+                return
+            }
+            document.querySelector('#msg2').innerText = ""
         })
     })
 }
@@ -122,7 +126,12 @@ document.querySelector('#test').addEventListener('click', async () => {
 
 document.querySelector('#create').addEventListener('click', async () => {
     const time = document.querySelector('#time').value
-    console.log(await window.exposed.create(time))
+    const created = await window.exposed.create(time)
+    if  (!created) {
+        document.querySelector('#msg2').innerText = "pleae enter a valid time in the date field"
+        return
+    }
+    document.querySelector('#msg2').innerText = ""
 })
 
 document.querySelector('#logout').addEventListener('click', async () => {
@@ -145,6 +154,7 @@ document.querySelector('#login-but').addEventListener('click', async () => {
     document.querySelector('#login').style.display = 'none'
     document.querySelector('#logininfo').style.display = 'none'
     document.querySelector('#logout').style.display = 'block'
+    document.querySelector('#cabin-list').style.display = 'block'
 })
 
 document.querySelector('#back1').addEventListener('click', async () => {
@@ -155,4 +165,5 @@ document.querySelector('#back1').addEventListener('click', async () => {
 document.querySelector('#back2').addEventListener('click', async () => {
     document.querySelector('#booking-container').style.display = 'none'
     document.querySelector('#service-container').style.display = 'block'
+    document.querySelector('#msg2').innerText = ""
 })
