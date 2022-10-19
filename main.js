@@ -56,7 +56,6 @@ ipcMain.handle('edit', async (event, data) => {
   try {
   if (data.time == "") {return false}
   d = new Date(data.time)
-  console.log(d)
   const res = await fetch(rahtiUrl + '/orders/' + data.order,{
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
@@ -68,7 +67,12 @@ ipcMain.handle('edit', async (event, data) => {
     timeout: 5000
   })
 
-  return res
+  if (res.status > 201) {
+    console.log(res.status + ' ' + res.statusText)
+    console.log(res)
+    return false
+  }
+  return true 
 
   } catch (error) {
     console.log(error.message)
@@ -80,7 +84,6 @@ ipcMain.handle('create', async (event, data) => {
   try {
     if (data == "") {return false}
     d = new Date(data)
-    console.log(d)
   const res = await fetch(rahtiUrl + '/orders',{
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -91,7 +94,13 @@ ipcMain.handle('create', async (event, data) => {
     }),
     timeout: 5000
   })
-  return res
+
+  if (res.status > 201) {
+    console.log(res.status + ' ' + res.statusText)
+    console.log(res)
+    return false
+  }
+  return true
 
   } catch (error) {
     console.log(error.message)
@@ -105,7 +114,13 @@ ipcMain.handle('delete', async (event, data) => {
       method: 'DELETE',
       timeout: 5000
     })
-    return res
+    
+    if (res.status > 201) {
+      console.log(res.status + ' ' + res.statusText)
+      console.log(res)
+      return false
+    }
+    return true
 
   } catch (error) {
     console.log(error.message)
